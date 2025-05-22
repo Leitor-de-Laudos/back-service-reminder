@@ -14,20 +14,12 @@ import java.util.UUID;
 @Repository
 public interface ReminderRepository extends JpaRepository<Reminder, UUID> {
 
-    List<Reminder> findByTitleReminderContainingIgnoreCase(String titleReminder);
+    Optional<Reminder> findByIdReminder(UUID idReminder); // Buscar lembrete por ID
 
-    List<Reminder> findByTargetReminderContainingIgnoreCase(String targetReminder);
+    List<Reminder> findByIdUser(UUID idUser); // Buscar lembretes de um usuário específico
 
-    List<Reminder> findByDateCreatedBetween(LocalDateTime startDate, LocalDateTime endDate);
+    void deleteByIdReminder(UUID idReminder); // Excluir lembrete por ID
 
-    List<Reminder> findByIdUser(UUID idUser);
-
-    List<Reminder> findByTitleReminderContainingIgnoreCaseAndDescriptionReminderContainingIgnoreCase(
-            String titleReminder, String descriptionReminder);
-
-    Optional<Reminder> findByIdReminder(UUID idReminder);
-
-    Page<Reminder> findAll(Pageable pageable);
-
-    void deleteByIdReminder(UUID idReminder);
+//    List<Reminder> findByDateCreatedBetween(LocalDateTime startDate, LocalDateTime endDate); // (opcional) para filtro por data
+//    Page<Reminder> findAll(Pageable pageable); // Paginação (opcional)
 }

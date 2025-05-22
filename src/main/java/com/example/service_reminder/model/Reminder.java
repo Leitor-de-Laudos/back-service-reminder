@@ -1,11 +1,21 @@
 package com.example.service_reminder.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
 import java.util.UUID;
 
+@Getter
+@Setter
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "reminder")
 public class Reminder {
 
@@ -13,78 +23,15 @@ public class Reminder {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID idReminder;
 
-    @ManyToOne
     private UUID idUser;
     private LocalDateTime dateCreated;
-    private LocalDateTime dateUpdated;
-    private String targetReminder;
-    private String titleReminder;
-    private String descriptionReminder;
+    private String nameReminder;
+    private String quantReminder;
+    private int dosageReminder;
+    private String dosageUnitReminder;
 
-    public Reminder(UUID idUser, UUID idReminder, LocalDateTime dateCreated, LocalDateTime dateUpdated,
-                    String targetReminder, String titleReminder, String descriptionReminder) {
-        this.idUser = idUser;
-        this.idReminder = idReminder;
-        this.dateCreated = dateCreated;
-        this.dateUpdated = dateUpdated;
-        this.targetReminder = targetReminder;
-        this.titleReminder = titleReminder;
-        this.descriptionReminder = descriptionReminder;
-    }
+    @ElementCollection
+    private List<String> weekDayReminder;
 
-    public UUID getIdUser() {
-        return idUser;
-    }
-
-    public void setIdUser(UUID idUser) {
-        this.idUser = idUser;
-    }
-
-    public UUID getIdReminder() {
-        return idReminder;
-    }
-
-    public void setIdReminder(UUID idReminder) {
-        this.idReminder = idReminder;
-    }
-
-    public LocalDateTime getDateCreated() {
-        return dateCreated;
-    }
-
-    public void setDateCreated(LocalDateTime dateCreated) {
-        this.dateCreated = dateCreated;
-    }
-
-    public LocalDateTime getDateUpdated() {
-        return dateUpdated;
-    }
-
-    public void setDateUpdated(LocalDateTime dateUpdated) {
-        this.dateUpdated = dateUpdated;
-    }
-
-    public String getTargetReminder() {
-        return targetReminder;
-    }
-
-    public void setTargetReminder(String targetReminder) {
-        this.targetReminder = targetReminder;
-    }
-
-    public String getTitleReminder() {
-        return titleReminder;
-    }
-
-    public void setTitleReminder(String titleReminder) {
-        this.titleReminder = titleReminder;
-    }
-
-    public String getDescriptionReminder() {
-        return descriptionReminder;
-    }
-
-    public void setDescriptionReminder(String descriptionReminder) {
-        this.descriptionReminder = descriptionReminder;
-    }
+    private LocalTime hourReminder;
 }
