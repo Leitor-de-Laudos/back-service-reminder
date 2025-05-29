@@ -2,10 +2,12 @@ package com.example.service_reminder.service;
 
 
 import com.example.service_reminder.DTO.ReminderDTO;
+import com.example.service_reminder.factory.ReminderFactory;
 import com.example.service_reminder.model.Reminder;
 import com.example.service_reminder.repository.ReminderRepository;
 
 import jakarta.persistence.EntityNotFoundException;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,10 +17,12 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class ReminderServiceImpl implements ReminderService {
 
     @Autowired
-    private ReminderRepository repository;
+    private final ReminderRepository repository;
+    private final ReminderFactory reminderFactory;
 
     @Override
     public ReminderDTO createReminder(ReminderDTO dto) {
@@ -30,6 +34,10 @@ public class ReminderServiceImpl implements ReminderService {
 
             if (dto.getQuantReminder() == null || dto.getQuantReminder().isBlank()) {
                 throw new IllegalArgumentException("A quantidade é obrigatória.");
+            }
+
+            if (dto.getEmail() == null || dto.getEmail().isBlank()) {
+                throw new IllegalArgumentException("Email é obrigatório!");
             }
 
             if (dto.getDosageReminder() == 0) {
@@ -52,19 +60,18 @@ public class ReminderServiceImpl implements ReminderService {
                 throw new IllegalArgumentException("O ID do usuário é obrigatório.");
             }
 
-            Reminder reminder = toEntity(dto);
-            reminder.setDateCreated(java.time.LocalDateTime.now());
+            // ✅ Usando o padrão Factory aqui
+            Reminder reminder = reminderFactory.createReminder(dto);
 
             return toDTO(repository.save(reminder));
 
         } catch (IllegalArgumentException e) {
-            // Lança exceção de validação para o controller tratar (400 Bad Request)
             throw e;
         } catch (Exception e) {
-            // Captura erro inesperado
             throw new RuntimeException("Erro ao criar lembrete: " + e.getMessage(), e);
         }
     }
+
 
     @Override
     public ReminderDTO getReminderById(UUID idReminder) {
@@ -104,6 +111,7 @@ public class ReminderServiceImpl implements ReminderService {
         ReminderDTO dto = new ReminderDTO();
         dto.setIdReminder(entity.getIdReminder());
         dto.setIdUser(entity.getIdUser());
+        dto.setEmail(entity.getEmail());
         dto.setDateCreated(entity.getDateCreated());
         dto.setNameReminder(entity.getNameReminder());
         dto.setQuantReminder(entity.getQuantReminder());
@@ -114,10 +122,11 @@ public class ReminderServiceImpl implements ReminderService {
         return dto;
     }
 
-    private Reminder toEntity(ReminderDTO dto) {
+    public Reminder toEntity(ReminderDTO dto) {
         Reminder entity = new Reminder();
         entity.setIdReminder(dto.getIdReminder());
         entity.setIdUser(dto.getIdUser());
+        entity.setEmail(dto.getEmail());
         entity.setDateCreated(dto.getDateCreated());
         entity.setNameReminder(dto.getNameReminder());
         entity.setQuantReminder(dto.getQuantReminder());

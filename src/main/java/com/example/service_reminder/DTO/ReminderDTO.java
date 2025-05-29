@@ -15,6 +15,7 @@ import java.util.UUID;
 public class ReminderDTO {
     private UUID idReminder;
     private UUID idUser;
+    private String email;
     private LocalDateTime dateCreated;
     private String nameReminder;
     private String quantReminder;

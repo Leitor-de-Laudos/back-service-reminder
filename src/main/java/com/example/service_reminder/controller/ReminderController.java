@@ -1,7 +1,8 @@
 package com.example.service_reminder.controller;
 
 import com.example.service_reminder.DTO.ReminderDTO;
-import com.example.service_reminder.service.ReminderService;
+import com.example.service_reminder.service.ReminderActionService;
+import com.example.service_reminder.service.ReminderServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,11 +17,13 @@ import java.util.UUID;
 public class ReminderController {
 
     @Autowired
-    private ReminderService service;
+    private ReminderServiceImpl service;
+
+    @Autowired
+    private ReminderActionService reminderActionService;
 
     @PostMapping
     public ResponseEntity<?> create(@RequestBody ReminderDTO dto) {
-
         try {
             return ResponseEntity.ok(service.createReminder(dto));
         } catch (IllegalArgumentException e) {

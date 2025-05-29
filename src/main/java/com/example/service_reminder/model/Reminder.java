@@ -24,6 +24,7 @@ public class Reminder {
     private UUID idReminder;
 
     private UUID idUser;
+    private String email;
     private LocalDateTime dateCreated;
     private String nameReminder;
     private String quantReminder;
